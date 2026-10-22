@@ -1,46 +1,48 @@
 /* =========================================================
-   BRAINWAVE — 涂鸦风独立游戏标题界面
-   配色取自用户参考图：奶油底 / 长春花蓝 / 正红 / 玫红 / 明黄
-   三套主题：cream（长春花蓝+正红）· peach（薰衣草+玫红）· night（深靛+明黄）
+   BRAINWAVE — 涂鸟风独立游戏标题界面
+   三套主题的每个色值均直接取样自用户参考图：
+     图1 生日插画  #7E86B2 长春花蓝 / #E73425 正红 / #43527F 靓蓝 / #FCECD9 奶油
+     图2 撞色插画  #AFA8C2 薰衣草 / #D1385A 玫红 / #5E3B4F 深梅 / #E8CE4E 明黄
+                  #21151D 近黑 / #FCF9F6 冷白 / #E79FAB 鲤鱼粉
    ========================================================= */
 
-:root{
-  --bg:#7C8CC2;
-  --accent:#F22B2B;
-  --title:#2E3A72;
-  --shadow:#17204A;
-  --menu:#FBE8D8;
-  --mi:#FBE8D8;
-  --mi-shadow:rgba(0,0,0,.55);
+:root{                              /* 主题1 奶油粉 */
+  --bg:#7E86B2;      /* 长春花蓝 */
+  --accent:#E73425;  /* 正红 */
+  --title:#43527F;   /* 靓蓝 */
+  --shadow:#241F2E;  /* 近黑 */
+  --menu:#FCECD9;
+  --mi:#FCECD9;
   --mi-hi:#FFFFFF;
-  --band:#FBE8D8;
+  --mi-shadow:rgba(0,0,0,.55);
+  --band:#FCECD9;    /* 奶油 */
   --paper:#FFFFFF;
   --page:#000000;
   --ui:#FFFFFF;
   --font-cn:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
 }
 
-.scene[data-theme="peach"]{
-  --bg:#A89CC0;
-  --accent:#E41854;
-  --title:#2E2545;
-  --shadow:#6E0A2E;
-  --menu:#FFF2E8;
-  --mi:#FFF2E8;
-  --mi-shadow:rgba(0,0,0,.55);
+.scene[data-theme="peach"]{       /* 主题2 蜜桃粉 */
+  --bg:#AFA8C2;      /* 薰衣草 */
+  --accent:#D1385A;  /* 玫红 */
+  --title:#5E3B4F;   /* 深梅 */
+  --shadow:#21151D;  /* 近黑 */
+  --menu:#F4D9CE;
+  --mi:#F4D9CE;
   --mi-hi:#FFFFFF;
-  --band:#FFF2E8;
+  --mi-shadow:rgba(0,0,0,.45);
+  --band:#F4D9CE;    /* 淡粉奶油 */
 }
-.scene[data-theme="night"]{
-  --bg:#241F4E;
-  --accent:#FFC93C;
-  --title:#3B7DE8;
-  --shadow:#141033;
-  --menu:#C9BEE0;
-  --mi:#2B1E0C;
-  --mi-shadow:rgba(255,255,255,.35);
-  --mi-hi:#241A08;
-  --band:#F4E5D5;
+.scene[data-theme="night"]{       /* 主题3 撞色（最贴近原视频） */
+  --bg:#2F3A5C;      /* 深板岩蓝 */
+  --accent:#E8CE4E;  /* 明黄 */
+  --title:#4A73D6;   /* 亮蓝 */
+  --shadow:#1A1420;  /* 近黑 */
+  --menu:#FCF9F6;
+  --mi:#2B2208;
+  --mi-hi:#1A1420;
+  --mi-shadow:rgba(255,255,255,.4);
+  --band:#FCF9F6;    /* 冷白 */
 }
 
 *{box-sizing:border-box;}
@@ -507,9 +509,9 @@ body{
 }
 .sw:hover{transform:scale(1.12);}
 .sw.is-on{outline:.22cqw solid #111;}
-.sw-cream{background:#7C8CC2;}
-.sw-peach{background:#A89CC0;}
-.sw-night{background:#241F4E;}
+.sw-cream{background:#7E86B2;}
+.sw-peach{background:#AFA8C2;}
+.sw-night{background:#2F3A5C;}
 
 /* ---------------- 开机动画 ---------------- */
 .boot{
