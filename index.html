@@ -16,7 +16,7 @@
 
   <!-- ============ 游戏画面（16:9 标题界面） ============ -->
   <section class="viewport" id="viewport">
-    <div class="scene" id="scene" data-theme="blue">
+    <div class="scene" id="scene" data-theme="cream">
 
       <div class="layer l-bg"></div>
 
@@ -26,8 +26,10 @@
         <path class="band-echo" d="M0,134 C 300,110 640,74 1000,52 C 1240,38 1420,32 1600,30 L1600,470 C 1360,492 1160,536 940,586 C 620,664 300,782 0,858 Z"/>
       </svg>
 
-      <!-- 角色插画位：留空待放入原画（建议 assets/img/face.png，透明底） -->
-      <div class="layer l-face" id="faceLayer"></div>
+      <!-- 角色插画位：换成自己的原画时直接替换 assets/img/character.webp 即可 -->
+      <div class="layer l-face" id="faceLayer">
+        <img src="assets/img/character.webp" alt="角色插画">
+      </div>
 
       <!-- 涂鸦（脚本生成） -->
       <svg class="layer l-splat" id="splatLayer" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true"></svg>
@@ -91,9 +93,9 @@
           <div class="set-row">
             <span class="set-label">主题配色</span>
             <div class="swatches" id="swatches">
-              <button class="sw sw-blue" data-theme="blue" title="电光蓝"></button>
-              <button class="sw sw-green" data-theme="green" title="苔原绿"></button>
-              <button class="sw sw-red" data-theme="red" title="绯红"></button>
+              <button class="sw sw-cream" data-theme="cream" title="奶油红"></button>
+              <button class="sw sw-peach" data-theme="peach" title="桃粉玫红"></button>
+              <button class="sw sw-night" data-theme="night" title="夜紫金"></button>
             </div>
           </div>
           <label class="set-row"><span class="set-label">背景音乐</span><input type="checkbox" checked data-toggle="music"><i class="sw-toggle"></i></label>

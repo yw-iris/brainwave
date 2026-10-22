@@ -149,11 +149,11 @@
     s += burst(830, 560, 62, rand, 6);
 
     /* 3. 干笔纹理：顺着喷射方向的细条纹 */
-    for (let i = 0; i < 34; i++) {
+    for (let i = 0; i < 26; i++) {
       const x = 760 + rand() * 760;
       const y = 90 + rand() * 700;
-      const w = 90 + rand() * 300;
-      s += '<path d="' + swipe(x, y, x + w, y + (rand() - 0.5) * 40, 3 + rand() * 5, 1, rand, 2, true) + '" opacity="' + (0.05 + rand() * 0.1).toFixed(2) + '"/>';
+      const w = 200 + rand() * 420;
+      s += '<path class="tex" d="' + swipe(x, y, x + w, y + (rand() - 0.5) * 40, 2 + rand() * 3, 1, rand, 2, true) + '" opacity="' + (0.04 + rand() * 0.05).toFixed(2) + '"/>';
     }
 
     /* 4. 飞溅液滴 */
