@@ -243,15 +243,17 @@ body{
   transition:background-color .55s ease;
 }
 
-/* 菜单 */
+/* 菜单：两列栅格（左列内容页 / 右列功能页） */
 .l-menu{
   inset:auto;
-  left:57.5%;
-  top:66%;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:.1cqw;
+  left:56%;
+  top:62%;
+  display:grid;
+  grid-template-rows:repeat(3,auto);
+  grid-auto-flow:column;
+  column-gap:3.4cqw;
+  row-gap:.15cqw;
+  align-items:start;
   transform:rotate(-3deg);
   transform-origin:0 0;
   opacity:0;
@@ -487,6 +489,142 @@ body{
   position:relative;
 }
 .set-label{font-weight:500;}
+
+/* ---------------- 详情页内容块：ABOUT / LIKES / DISLIKES ---------------- */
+.about-top{
+  display:flex;
+  align-items:center;
+  gap:1.6cqw;
+  padding-bottom:1.2cqw;
+  border-bottom:.1cqw solid #e0e0e0;
+  margin-bottom:1.2cqw;
+}
+.about-face{
+  width:9.5cqw;
+  height:9.5cqw;
+  flex:none;
+  overflow:hidden;
+  border-radius:.6cqw;
+  background:#ece7dd;
+  border:.22cqw solid var(--accent);
+  transform:rotate(-2.5deg);
+}
+.about-face img{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:50% 10%;
+  transform:scale(1.45);
+  transform-origin:50% 16%;
+  display:block;
+}
+.about-id{min-width:0;}
+.about-name{
+  font-family:"Anton","Arial Black",sans-serif;
+  font-size:3.6cqw;
+  line-height:1;
+  letter-spacing:.01em;
+  color:#111;
+}
+.about-role{
+  margin-top:.35cqw;
+  font-family:"Barlow Condensed",Impact,sans-serif;
+  font-weight:700;
+  font-style:italic;
+  font-size:1.7cqw;
+  letter-spacing:.06em;
+  color:#777;
+}
+.about-tags{
+  margin-top:.6cqw;
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45cqw;
+}
+.about-tag{
+  font-family:"Barlow Condensed",Impact,sans-serif;
+  font-weight:800;
+  font-style:italic;
+  font-size:1.2cqw;
+  letter-spacing:.08em;
+  color:#111;
+  background:rgba(0,0,0,.06);
+  border:.1cqw solid rgba(0,0,0,.14);
+  padding:.18em .55em;
+  border-radius:.2em;
+  line-height:1;
+}
+.about-bio{
+  margin:0 0 1.3cqw;
+  font-size:1.75cqw;
+  line-height:1.75;
+  color:#333;
+  letter-spacing:.01em;
+}
+.kv{
+  border-top:.1cqw solid #e0e0e0;
+}
+.kv-row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:1.2cqw;
+  padding:.62cqw 0;
+  border-bottom:.08cqw solid #e6e6e6;
+}
+.kv-k{
+  flex:none;
+  font-family:"Barlow Condensed",Impact,sans-serif;
+  font-weight:700;
+  font-style:italic;
+  font-size:1.6cqw;
+  letter-spacing:.04em;
+  color:#666;
+}
+.kv-v{
+  text-align:right;
+  font-size:1.65cqw;
+  color:#111;
+  font-weight:500;
+}
+.panel-lede{
+  margin:0 0 1.2cqw;
+  font-size:1.7cqw;
+  line-height:1.7;
+  color:#555;
+  letter-spacing:.01em;
+}
+.pt-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  border-top:.1cqw solid #e0e0e0;
+}
+.pt{
+  display:flex;
+  align-items:baseline;
+  gap:1cqw;
+  padding:.72cqw 0;
+  border-bottom:.08cqw solid #e6e6e6;
+}
+.pt-idx{
+  flex:none;
+  width:2.4cqw;
+  font-family:"Barlow Condensed",Impact,sans-serif;
+  font-weight:800;
+  font-style:italic;
+  font-size:1.5cqw;
+  color:#fff;
+  background:var(--accent);
+  padding:.1em .3em;
+  border-radius:.2em;
+  text-align:center;
+  line-height:1.2;
+}
+.pt-txt{
+  font-size:1.7cqw;
+  color:#333;
+  line-height:1.5;
+}
 .set-row input{position:absolute;opacity:0;pointer-events:none;}
 .sw-toggle{
   width:4.4cqw;height:2.2cqw;border-radius:1.1cqw;
@@ -629,9 +767,12 @@ body{
 .scene.is-intro .l-strip{animation:fadeIn .45s 1.5s ease both;}
 .scene.is-intro .l-version{animation:fadeIn .45s 1.58s ease both;}
 .scene.is-intro .mi{animation:miIn .4s ease both;}
-.scene.is-intro .mi:nth-child(1){animation-delay:1.3s;}
-.scene.is-intro .mi:nth-child(2){animation-delay:1.4s;}
-.scene.is-intro .mi:nth-child(3){animation-delay:1.5s;}
+.scene.is-intro .mi:nth-child(1){animation-delay:1.30s;}
+.scene.is-intro .mi:nth-child(2){animation-delay:1.36s;}
+.scene.is-intro .mi:nth-child(3){animation-delay:1.42s;}
+.scene.is-intro .mi:nth-child(4){animation-delay:1.34s;}
+.scene.is-intro .mi:nth-child(5){animation-delay:1.40s;}
+.scene.is-intro .mi:nth-child(6){animation-delay:1.46s;}
 
 @keyframes arcDraw{
   from{stroke-dashoffset:1;}
