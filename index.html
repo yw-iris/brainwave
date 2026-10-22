@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brainwave 独立游戏开发日志 #1 · 三大工作室</title>
+<meta name="description" content="Brainwave 独立游戏开发日志 #1 —— 涂鸦风独立游戏标题界面复刻，支持三套主题切换、档案与设置面板。">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<main class="page">
+
+  <!-- ============ 游戏画面（16:9 标题界面） ============ -->
+  <section class="viewport" id="viewport">
+    <div class="scene" id="scene" data-theme="blue">
+
+      <div class="layer l-bg"></div>
+
+      <!-- 白色斜切刷痕底板 -->
+      <svg class="layer l-band" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+        <path class="band-main" d="M0,96 C 280,74 640,40 980,18 C 1230,4 1430,1 1600,0 L1600,452 C 1380,470 1180,512 960,562 C 640,640 300,760 0,842 Z"/>
+        <path class="band-echo" d="M0,134 C 300,110 640,74 1000,52 C 1240,38 1420,32 1600,30 L1600,470 C 1360,492 1160,536 940,586 C 620,664 300,782 0,858 Z"/>
+      </svg>
+
+      <!-- 角色线稿 -->
+      <div class="layer l-face" id="faceLayer">
+        <svg viewBox="0 0 640 760" aria-label="角色线稿">
+          <g class="face-ink">
+            <!-- 头发块面 -->
+            <path d="M0,0 H470 C500,60 512,130 506,190 C480,176 452,178 430,196 C404,218 376,230 348,222 C326,240 300,246 276,236 C256,252 232,258 210,248 C188,264 162,268 140,256 C116,270 92,272 70,258 C46,272 22,296 0,330 Z"/>
+            <path class="strand" d="M470,52 C432,100 398,146 368,192"/>
+            <path class="strand" d="M430,34 C392,84 358,132 330,178"/>
+            <path class="strand" d="M386,22 C350,74 318,124 292,172"/>
+            <path class="strand" d="M340,12 C306,64 276,116 252,166"/>
+            <path class="strand" d="M292,8 C260,60 232,112 210,164"/>
+            <path class="strand" d="M244,4 C214,56 188,110 168,162"/>
+            <path class="strand" d="M196,2 C168,54 144,108 126,160"/>
+            <path class="strand" d="M148,4 C122,54 100,106 84,156"/>
+            <path class="strand" d="M100,12 C78,60 58,110 46,158"/>
+            <path class="strand" d="M56,26 C38,74 24,120 18,166"/>
+            <path class="strand" d="M26,60 C16,104 10,146 10,186"/>
+            <path class="strand" d="M18,166 C14,230 18,290 30,344"/>
+            <path class="strand" d="M46,158 C40,226 42,288 52,340"/>
+            <path class="strand" d="M84,156 C76,224 76,286 84,336"/>
+            <path class="strand" d="M126,160 C116,226 114,288 120,336"/>
+            <path class="strand" d="M168,162 C156,228 154,288 158,334"/>
+            <path class="strand" d="M300,206 C322,254 330,300 324,344"/>
+            <path class="strand" d="M372,178 C394,224 402,268 398,314"/>
+            <!-- 眉 -->
+            <path class="fine" d="M100,240 C142,214 198,210 244,228"/>
+            <!-- 眼 -->
+            <path class="lid" d="M96,346 C114,282 152,252 206,254 C244,256 266,272 272,296"/>
+            <path class="fine" d="M96,346 C122,378 180,384 232,350 C248,338 264,318 272,296"/>
+            <ellipse class="iris" cx="176" cy="318" rx="34" ry="42"/>
+            <ellipse class="pupil" cx="180" cy="324" rx="15" ry="22"/>
+            <ellipse class="gloss" cx="163" cy="295" rx="9" ry="10"/>
+            <ellipse class="gloss" cx="194" cy="346" rx="5" ry="5"/>
+            <path class="lash" d="M138,262 L128,232"/>
+            <path class="lash" d="M186,252 L184,220"/>
+            <path class="lash" d="M232,262 L244,232"/>
+            <!-- 鼻 / 唇 -->
+            <path class="fine" d="M92,352 C82,372 86,386 98,390"/>
+            <path class="fine" d="M116,424 C138,438 160,432 174,414"/>
+            <!-- 面部轮廓（向画外延伸，不闭合） -->
+            <path class="jaw" d="M100,392 C104,448 126,494 166,524 C196,546 226,556 252,556"/>
+            <path class="fine" d="M94,420 C90,452 96,480 112,500"/>
+            <!-- 耳部装置 -->
+            <path class="device" d="M356,272 L428,262 C444,260 451,272 449,288 L441,360 C439,376 424,383 407,380 L355,368 C341,365 338,353 340,336 L347,288 C348,280 351,273 356,272 Z"/>
+            <path class="fine" d="M351,300 C376,295 414,297 432,304"/>
+            <path class="fine" d="M349,332 C374,327 410,329 428,336"/>
+            <path class="band-strap" d="M386,268 C424,206 440,132 434,72"/>
+            <path class="cable" d="M452,372 C472,444 452,528 398,586"/>
+            <path class="cable" d="M398,586 C368,612 326,618 292,604"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 涂鸦（脚本生成） -->
+      <svg class="layer l-splat" id="splatLayer" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+      <!-- 标题 -->
+      <div class="l-title-wrap"><h1 class="l-title" id="title" data-text="BRAINWAVE">BRAINWAVE</h1></div>
+
+      <div class="layer l-tagline">
+        <span class="ng">NEW GAME</span><span class="ng-tag">开始</span>
+      </div>
+
+      <nav class="layer l-menu" id="menu" aria-label="主菜单">
+        <button class="mi" data-action="theme"><span class="mi-txt">THEME</span></button>
+        <button class="mi" data-action="records"><span class="mi-txt">RECORDS</span><i class="mi-badge">NEW</i></button>
+        <button class="mi" data-action="settings"><span class="mi-txt">SETTINGS</span></button>
+      </nav>
+
+      <div class="layer l-strip">
+        <span class="play-dot"></span>
+        <span class="thumb thumb-a">玩法演示</span>
+        <span class="thumb thumb-b">开发日志</span>
+        <span class="thumb thumb-c">原声带</span>
+      </div>
+
+      <div class="layer l-version">V1.1.1 BETA&nbsp;内测</div>
+
+      <div class="layer l-grain"></div>
+      <div class="layer l-scan"></div>
+
+      <!-- 面板：档案 -->
+      <div class="panel panel-records" id="panelRecords" hidden>
+        <div class="paper">
+          <div class="paper-head">
+            <h2>RECORDS</h2>
+            <button class="paper-close" data-close aria-label="关闭">✕</button>
+          </div>
+          <table class="rec-table">
+            <thead><tr><th>#</th><th>日期</th><th>模式</th><th>得分</th><th>评级</th></tr></thead>
+            <tbody>
+              <tr><td>01</td><td>2026-04-18</td><td>新手引导</td><td>128,400</td><td class="grade g-s">S</td></tr>
+              <tr><td>02</td><td>2026-05-02</td><td>自由潜行</td><td>203,150</td><td class="grade g-a">A</td></tr>
+              <tr><td>03</td><td>2026-05-27</td><td>深潜</td><td>316,880</td><td class="grade g-s">S</td></tr>
+              <tr><td>04</td><td>2026-06-11</td><td>无意识</td><td>241,600</td><td class="grade g-a">A</td></tr>
+              <tr><td>05</td><td>2026-07-30</td><td>零号日</td><td>487,220</td><td class="grade g-ss">SS</td></tr>
+            </tbody>
+          </table>
+          <div class="paper-foot">共 5 条记录 · 最高分 487,220</div>
+        </div>
+      </div>
+
+      <!-- 面板：设置 -->
+      <div class="panel panel-settings" id="panelSettings" hidden>
+        <div class="paper">
+          <div class="paper-head">
+            <h2>SETTINGS</h2>
+            <button class="paper-close" data-close aria-label="关闭">✕</button>
+          </div>
+          <div class="set-row">
+            <span class="set-label">主题配色</span>
+            <div class="swatches" id="swatches">
+              <button class="sw sw-blue" data-theme="blue" title="电光蓝"></button>
+              <button class="sw sw-green" data-theme="green" title="苔原绿"></button>
+              <button class="sw sw-red" data-theme="red" title="绯红"></button>
+            </div>
+          </div>
+          <label class="set-row"><span class="set-label">背景音乐</span><input type="checkbox" checked data-toggle="music"><i class="sw-toggle"></i></label>
+          <label class="set-row"><span class="set-label">音效</span><input type="checkbox" checked data-toggle="sfx"><i class="sw-toggle"></i></label>
+          <label class="set-row"><span class="set-label">界面震动</span><input type="checkbox" data-toggle="shake"><i class="sw-toggle"></i></label>
+          <label class="set-row"><span class="set-label">自动轮播主题</span><input type="checkbox" checked data-toggle="autocycle"><i class="sw-toggle"></i></label>
+          <label class="set-row"><span class="set-label">全屏观看</span><input type="checkbox" data-toggle="fullscreen"><i class="sw-toggle"></i></label>
+          <div class="paper-foot">BRAINWAVE v1.1.1 BETA · 三大工作室</div>
+        </div>
+      </div>
+
+      <!-- 开机动画 -->
+      <div class="boot" id="boot" hidden>
+        <div class="boot-inner">
+          <div class="boot-logo">
+            <span class="boot-word">BRAINWAVE</span>
+            <span class="boot-sub">NEW GAME</span>
+          </div>
+          <div class="boot-bar"><i id="bootBar"></i></div>
+          <div class="boot-hint" id="bootHint">加载中…</div>
+        </div>
+      </div>
+
+      <div class="scene-flash" id="flash"></div>
+    </div>
+
+    <button class="watch-all" id="watchAll" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18.5h4"/></svg>
+      全屏观看
+    </button>
+  </section>
+
+  <!-- ============ 视频信息区 ============ -->
+  <section class="meta">
+    <div class="creator">
+      <span class="avatar" aria-hidden="true"><i></i></span>
+      <span class="creator-name">草履虫</span>
+      <button class="follow" id="followBtn" type="button">关注</button>
+    </div>
+    <h2 class="caption">Brainwave独立游戏开发日志#1<br>大家好这里是三大工作室，欢迎大家。展开</h2>
+    <div class="search-chip" role="search">相关搜索 · Brainwave独立游戏 <span>›</span></div>
+  </section>
+
+  <!-- ============ 底部操作栏 ============ -->
+  <footer class="actionbar">
+    <div class="comment-box"><span class="pen">✎</span>说点什么...</div>
+    <div class="stats">
+      <span class="st st-like"><b>❤</b>628</span>
+      <span class="st st-fav"><b>★</b>240</span>
+      <span class="st st-cmt"><b>💬</b>54</span>
+    </div>
+  </footer>
+</main>
+
+<script src="assets/js/splat.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

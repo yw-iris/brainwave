@@ -1,0 +1,6 @@
+/* 自托管字体：Anton + Barlow Condensed（latin 子集），避免依赖 Google Fonts CDN */
+@font-face{font-family:'Anton';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/Anton-normal-400.woff2') format('woff2');}
+@font-face{font-family:'Barlow Condensed';font-style:italic;font-weight:700;font-display:swap;src:url('fonts/BarlowCondensed-italic-700.woff2') format('woff2');}
+@font-face{font-family:'Barlow Condensed';font-style:italic;font-weight:800;font-display:swap;src:url('fonts/BarlowCondensed-italic-800.woff2') format('woff2');}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/BarlowCondensed-normal-700.woff2') format('woff2');}
+@font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:800;font-display:swap;src:url('fonts/BarlowCondensed-normal-800.woff2') format('woff2');}
