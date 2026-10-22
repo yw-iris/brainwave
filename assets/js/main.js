@@ -73,18 +73,15 @@
   /* ---------------- 入场 ---------------- */
   function playIntro() {
     const k = slow || 1;
-    scene.classList.add('is-intro');
-    setTimeout(() => scene.classList.add('is-in'), 140 * k);
     if (frame > 0) {
-      /* 定格模式：保持 is-intro，用 WAAPI 把每条动画定格在第 F 秒 */
-      setTimeout(() => {
-        document.getAnimations().forEach(a => {
-          try { a.pause(); a.currentTime = frame * 1000; } catch (e) { /* ignore */ }
-        });
-      }, 90);
+      /* 定格模式：不跑 CSS 入场动画，直接落到终态；
+         喷射揭示由 JS 按 frame 手动设置 rx/ry（见下方 frame 分支）。 */
+      scene.classList.add('is-settled');
       introDone = true;
       return;
     }
+    scene.classList.add('is-intro');
+    setTimeout(() => scene.classList.add('is-in'), 140 * k);
     setTimeout(() => {
       scene.classList.remove('is-intro');
       introDone = true;
@@ -256,6 +253,27 @@
   const slow = Math.min(20, Math.max(0, parseFloat(params.get('slow') || '0') || 0));
   const frame = Math.max(0, parseFloat(params.get('frame') || '0') || 0);
 
+  /* 三次贝塞尔缓动求值（与 SMIL keySplines 保持一致，用于逐帧定格） */
+  function cubicBezier(x1, y1, x2, y2) {
+    const A = (a, b) => 1 - 3 * b + 3 * a;
+    const B = (a, b) => 3 * b - 6 * a;
+    const C = a => 3 * a;
+    const calc = (t, a, b) => ((A(a, b) * t + B(a, b)) * t + C(a)) * t;
+    const slope = (t, a, b) => 3 * A(a, b) * t * t + 2 * B(a, b) * t + C(a);
+    return function (x) {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      let t = x;
+      for (let i = 0; i < 12; i++) {
+        const s = slope(t, x1, x2);
+        if (Math.abs(s) < 1e-6) break;
+        t -= (calc(t, x1, x2) - x) / s;
+        if (t < 0) t = 0; else if (t > 1) t = 1;
+      }
+      return calc(t, y1, y2);
+    };
+  }
+
   function injectCss(css) {
     const st = document.createElement('style');
     st.textContent = css;
@@ -266,13 +284,21 @@
     /* 定格模式：把入场动画冻结在第 F 秒（由 playIntro 用 WAAPI 精确定位） */
     const anim = document.getElementById('bwSprayAnim');
     if (anim) anim.remove();
+    const animY = document.getElementById('bwSprayAnimY');
+    if (animY) animY.remove();
     const dot = document.getElementById('bwSprayDot');
-    if (dot) {
-      const u = (frame - 0.15) / 0.62;
-      let r = 0;
-      if (u >= 1) r = 1500;
-      else if (u > 0) r = u < 0.72 ? 1340 * (u / 0.72) : 1340 + 160 * ((u - 0.72) / 0.28);
-      dot.setAttribute('r', r.toFixed(1));
+    if (dot && window.Splat) {
+      const R = window.Splat.REVEAL;
+      const u = Math.min(1, Math.max(0, (frame - R.begin) / R.dur));
+      const easeX = cubicBezier(0.16, 0.88, 0.2, 1);
+      const easeY1 = cubicBezier(0.2, 0.8, 0.3, 1);
+      const easeY2 = cubicBezier(0.25, 0.92, 0.35, 1);
+      let rx = R.rx * easeX(u);
+      let ry;
+      if (u < 0.26) ry = 46 * easeY1(u / 0.26);
+      else ry = 46 + (R.ry - 46) * easeY2((u - 0.26) / 0.74);
+      dot.setAttribute('rx', rx.toFixed(1));
+      dot.setAttribute('ry', ry.toFixed(1));
     }
   } else if (slow > 0) {
     /* 慢放入场动画，便于演示 / 逐帧检查：?slow=4 */
@@ -283,7 +309,6 @@
       '.scene.is-intro .l-splat .arc{animation-duration:calc(.62s * var(--slow)) !important;animation-delay:calc(.8s * var(--slow)) !important;}',
       '.scene.is-intro .l-title{animation-duration:calc(.72s * var(--slow)) !important;animation-delay:calc(.95s * var(--slow)) !important;}',
       '.scene.is-intro .l-title-shadow{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.06s * var(--slow)) !important;}',
-      '.scene.is-intro .l-title-wrap::after{animation-duration:calc(.68s * var(--slow)) !important;animation-delay:calc(1.3s * var(--slow)) !important;}',
       '.scene.is-intro .l-tagline{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.4s * var(--slow)) !important;}',
       '.scene.is-intro .l-strip{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.85s * var(--slow)) !important;}',
       '.scene.is-intro .l-version{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.93s * var(--slow)) !important;}',
@@ -293,11 +318,13 @@
       '.scene.is-intro .mi:nth-child(3){animation-delay:calc(1.75s * var(--slow)) !important;}',
     ].join('\n'));
     /* 喷射遮罩是 SMIL 动画，一并放慢 */
-    const anim = document.getElementById('bwSprayAnim');
-    if (anim) {
-      anim.setAttribute('dur', (0.62 * slow).toFixed(3) + 's');
-      anim.setAttribute('begin', (0.15 * slow).toFixed(3) + 's');
-    }
+    ['bwSprayAnim', 'bwSprayAnimY'].forEach(id => {
+      const a = document.getElementById(id);
+      if (a) {
+        a.setAttribute('dur', (0.5 * slow).toFixed(3) + 's');
+        a.setAttribute('begin', (0.45 * slow).toFixed(3) + 's');
+      }
+    });
   }
 
   const qs = params.get('theme');
