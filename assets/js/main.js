@@ -75,7 +75,16 @@
     const k = slow || 1;
     scene.classList.add('is-intro');
     setTimeout(() => scene.classList.add('is-in'), 140 * k);
-    if (frame > 0) { introDone = true; return; }   /* 定格模式：保持 is-intro 以锁住动画帧 */
+    if (frame > 0) {
+      /* 定格模式：保持 is-intro，用 WAAPI 把每条动画定格在第 F 秒 */
+      setTimeout(() => {
+        document.getAnimations().forEach(a => {
+          try { a.pause(); a.currentTime = frame * 1000; } catch (e) { /* ignore */ }
+        });
+      }, 90);
+      introDone = true;
+      return;
+    }
     setTimeout(() => {
       scene.classList.remove('is-intro');
       introDone = true;
@@ -254,38 +263,41 @@
   }
 
   if (frame > 0) {
-    /* 定格模式：把入场动画冻结在第 F 秒，便于逐帧核对 ?frame=0.9 */
-    const F = frame.toFixed(3);
-    const items = [
-      ['.l-band', 0], ['.l-splat', 0.18], ['.l-face', 0.1], ['.l-title', 0.45],
-      ['.l-title-shadow', 0.56], ['.l-title-wrap::after', 0.8], ['.l-tagline', 0.95],
-      ['.l-strip', 1.2], ['.l-version', 1.28], ['.mi', 1.1],
-    ];
-    let css = '';
-    items.forEach(([sel, d]) => {
-      css += `.scene.is-intro ${sel}{animation-delay:${(d - frame).toFixed(3)}s !important;animation-play-state:paused !important;}\n`;
-    });
-    css += `.scene.is-intro .mi:nth-child(2){animation-delay:${(1.2 - frame).toFixed(3)}s !important;animation-play-state:paused !important;}\n`;
-    css += `.scene.is-intro .mi:nth-child(3){animation-delay:${(1.3 - frame).toFixed(3)}s !important;animation-play-state:paused !important;}\n`;
-    injectCss(css);
+    /* 定格模式：把入场动画冻结在第 F 秒（由 playIntro 用 WAAPI 精确定位） */
+    const anim = document.getElementById('bwSprayAnim');
+    if (anim) anim.remove();
+    const dot = document.getElementById('bwSprayDot');
+    if (dot) {
+      const u = (frame - 0.15) / 0.62;
+      let r = 0;
+      if (u >= 1) r = 1500;
+      else if (u > 0) r = u < 0.72 ? 1340 * (u / 0.72) : 1340 + 160 * ((u - 0.72) / 0.28);
+      dot.setAttribute('r', r.toFixed(1));
+    }
   } else if (slow > 0) {
     /* 慢放入场动画，便于演示 / 逐帧检查：?slow=4 */
     document.documentElement.style.setProperty('--slow', String(slow));
     injectCss([
       '.scene.is-intro .l-band{animation-duration:calc(.9s * var(--slow)) !important;animation-delay:0s !important;}',
-      '.scene.is-intro .l-splat{animation-duration:calc(.8s * var(--slow)) !important;animation-delay:calc(.18s * var(--slow)) !important;}',
       '.scene.is-intro .l-face{animation-duration:calc(.8s * var(--slow)) !important;animation-delay:calc(.1s * var(--slow)) !important;}',
-      '.scene.is-intro .l-title{animation-duration:calc(.72s * var(--slow)) !important;animation-delay:calc(.45s * var(--slow)) !important;}',
-      '.scene.is-intro .l-title-shadow{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(.56s * var(--slow)) !important;}',
-      '.scene.is-intro .l-title-wrap::after{animation-duration:calc(.68s * var(--slow)) !important;animation-delay:calc(.8s * var(--slow)) !important;}',
-      '.scene.is-intro .l-tagline{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(.95s * var(--slow)) !important;}',
-      '.scene.is-intro .l-strip{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.2s * var(--slow)) !important;}',
-      '.scene.is-intro .l-version{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.28s * var(--slow)) !important;}',
+      '.scene.is-intro .l-splat .arc{animation-duration:calc(.62s * var(--slow)) !important;animation-delay:calc(.8s * var(--slow)) !important;}',
+      '.scene.is-intro .l-title{animation-duration:calc(.72s * var(--slow)) !important;animation-delay:calc(.95s * var(--slow)) !important;}',
+      '.scene.is-intro .l-title-shadow{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.06s * var(--slow)) !important;}',
+      '.scene.is-intro .l-title-wrap::after{animation-duration:calc(.68s * var(--slow)) !important;animation-delay:calc(1.3s * var(--slow)) !important;}',
+      '.scene.is-intro .l-tagline{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.4s * var(--slow)) !important;}',
+      '.scene.is-intro .l-strip{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.85s * var(--slow)) !important;}',
+      '.scene.is-intro .l-version{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.93s * var(--slow)) !important;}',
       '.scene.is-intro .mi{animation-duration:calc(.45s * var(--slow)) !important;}',
-      '.scene.is-intro .mi:nth-child(1){animation-delay:calc(1.1s * var(--slow)) !important;}',
-      '.scene.is-intro .mi:nth-child(2){animation-delay:calc(1.2s * var(--slow)) !important;}',
-      '.scene.is-intro .mi:nth-child(3){animation-delay:calc(1.3s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(1){animation-delay:calc(1.55s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(2){animation-delay:calc(1.65s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(3){animation-delay:calc(1.75s * var(--slow)) !important;}',
     ].join('\n'));
+    /* 喷射遮罩是 SMIL 动画，一并放慢 */
+    const anim = document.getElementById('bwSprayAnim');
+    if (anim) {
+      anim.setAttribute('dur', (0.62 * slow).toFixed(3) + 's');
+      anim.setAttribute('begin', (0.15 * slow).toFixed(3) + 's');
+    }
   }
 
   const qs = params.get('theme');

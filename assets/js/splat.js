@@ -1,9 +1,14 @@
 /* =========================================================
-   splat.js — 程序化生成涂鸦 / 泼墨笔触
-   固定随机种子，保证每次刷新形状一致
+   splat.js — 程序化生成「喷射」墨迹
+   参考视频：黄色油漆自画面左侧一点向右爆射，拖出方向性笔触、
+   飞溅液滴与干笔纹理，轨迹上叠一道背景色弧线。
+   固定随机种子，保证每次刷新形状一致。
    ========================================================= */
 (function (global) {
   'use strict';
+
+  const ORIGIN_X = 600;   /* 喷射原点（画面 1600 宽坐标系） */
+  const ORIGIN_Y = 330;
 
   function mulberry32(a) {
     return function () {
@@ -17,17 +22,16 @@
   /* 不规则闭合墨块 */
   function blob(cx, cy, r, rand, opt) {
     opt = opt || {};
-    const pts = opt.pts || 24;
+    const pts = opt.pts || 20;
     const rough = opt.rough == null ? 0.45 : opt.rough;
     const sy = opt.squash == null ? 1 : opt.squash;
     const p = [];
     for (let i = 0; i < pts; i++) {
       const a = (i / pts) * Math.PI * 2;
       let rr = r * (1 - rough / 2 + rand() * rough);
-      if (opt.spikes && rand() < 0.3) rr *= 1 + rand() * 0.95;
+      if (opt.spikes && rand() < 0.32) rr *= 1 + rand() * 0.95;
       p.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr * sy]);
     }
-    /* 棱角模式：直边多边形，接近干墨飞溅的硬边 */
     if (opt.angular) {
       let d = 'M' + f(p[0][0]) + ' ' + f(p[0][1]);
       for (let i = 1; i < pts; i++) d += 'L' + f(p[i][0]) + ' ' + f(p[i][1]);
@@ -43,48 +47,47 @@
     return d + 'Z';
   }
 
-  /* 飞溅小液滴 */
-  function droplets(cx, cy, spread, count, rand, rMin, rMax) {
+  /* 飞溅液滴 */
+  function droplets(cx, cy, spread, count, rand, rMin, rMax, dirX) {
     let out = '';
     for (let i = 0; i < count; i++) {
       const a = rand() * Math.PI * 2;
-      const d = spread * (0.35 + rand() * 0.75);
-      const x = cx + Math.cos(a) * d;
+      let d = spread * (0.3 + rand() * 0.85);
+      const x = cx + Math.cos(a) * d + (dirX || 0) * d * 0.5;
       const y = cy + Math.sin(a) * d * 0.8;
       const r = rMin + rand() * (rMax - rMin);
-      out += '<ellipse cx="' + f(x) + '" cy="' + f(y) + '" rx="' + f(r) + '" ry="' + f(r * (0.65 + rand() * 0.5)) + '"/>';
+      out += '<ellipse cx="' + f(x) + '" cy="' + f(y) + '" rx="' + f(r) + '" ry="' + f(r * (0.6 + rand() * 0.55)) + '"/>';
     }
     return out;
   }
 
-  /* 带尖刺的溅射轮廓（星芒状） */
+  /* 带尖刺的溅射轮廓 */
   function burst(cx, cy, r, rand, spikes) {
     let out = '';
     for (let i = 0; i < spikes; i++) {
       const a = (i / spikes) * Math.PI * 2 + rand() * 0.3;
-      const len = r * (0.5 + rand() * 1.5);
+      const len = r * (0.5 + rand() * 1.6);
       const w = r * (0.05 + rand() * 0.1);
       const x1 = cx + Math.cos(a) * len, y1 = cy + Math.sin(a) * len * 0.85;
       const nx = Math.cos(a + Math.PI / 2) * w, ny = Math.sin(a + Math.PI / 2) * w;
-      const x2 = cx + Math.cos(a + Math.PI / 2) * w * 0.4, y2 = cy + Math.sin(a + Math.PI / 2) * w * 0.4;
       out += '<path d="M' + f(cx + nx) + ' ' + f(cy + ny) + 'L' + f(x1) + ' ' + f(y1) + 'L' + f(cx - nx) + ' ' + f(cy - ny) + 'Z"/>';
-      if (rand() < 0.5) {
-        out += '<ellipse cx="' + f(x1 + (rand() - 0.5) * 20) + '" cy="' + f(y1 + (rand() - 0.5) * 20) + '" rx="' + f(2 + rand() * 5) + '" ry="' + f(2 + rand() * 4) + '"/>';
+      if (rand() < 0.55) {
+        out += '<ellipse cx="' + f(x1 + (rand() - 0.5) * 26) + '" cy="' + f(y1 + (rand() - 0.5) * 26) + '" rx="' + f(2 + rand() * 5) + '" ry="' + f(2 + rand() * 4) + '"/>';
       }
     }
     return out;
   }
 
-  /* 渐细的毛笔甩笔（两端收锋） */
-  function swipe(x1, y1, x2, y2, w1, w2, rand, rough) {
-    const steps = 30;
+  /* 甩笔：origin 端收锋，末端可保持宽度（喷射尾迹用） */
+  function swipe(x1, y1, x2, y2, w1, w2, rand, rough, keepEnd) {
+    const steps = 26;
     const dx = x2 - x1, dy = y2 - y1;
-    const len = Math.hypot(dx, dy);
+    const len = Math.hypot(dx, dy) || 1;
     const nx = -dy / len, ny = dx / len;
     const top = [], bot = [];
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
-      const taper = Math.min(1, t * 7, (1 - t) * 7 + 0.12);
+      const taper = keepEnd ? Math.min(1, t * 9) : Math.min(1, t * 7, (1 - t) * 7 + 0.12);
       const w = (w1 + (w2 - w1) * Math.pow(t, 0.85)) * taper * (0.7 + rand() * 0.6);
       const px = x1 + dx * t, py = y1 + dy * t;
       top.push([px + nx * w + (rand() - 0.5) * rough, py + ny * w + (rand() - 0.5) * rough]);
@@ -98,48 +101,73 @@
 
   function f(n) { return Math.round(n * 10) / 10; }
 
-  /* 完整的涂鸦图层 */
+  /* ---------------- 喷射墨迹图层 ---------------- */
   function build() {
     const rand = mulberry32(20260418);
+    const ox = ORIGIN_X, oy = ORIGIN_Y;
     let s = '';
 
-    /* 标题后方的长甩笔 */
-    s += '<path d="' + swipe(500, 552, 1592, 104, 44, 9, rand, 6) + '"/>';
-    /* 白色干笔叠加 */
-    s += '<path class="splat-dry" d="' + swipe(620, 486, 1530, 158, 21, 4, rand, 5) + '"/>';
-    s += '<path class="splat-dry" d="' + swipe(760, 420, 1380, 214, 12, 3, rand, 4) + '"/>';
+    /* 遮罩：从原点扩散的圆，逐帧"喷"出墨迹 */
+    s += '<defs><mask id="bwSpray" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900">';
+    s += '<circle id="bwSprayDot" cx="' + ox + '" cy="' + oy + '" r="0" fill="#fff">';
+    s += '<animate id="bwSprayAnim" attributeName="r" values="0;1340;1500" keyTimes="0;0.72;1" ';
+    s += 'keySplines="0.1 0.85 0.2 1;0.35 0 0.25 1" calcMode="spline" dur="0.62s" begin="0.15s" fill="freeze"/>';
+    s += '</circle></mask></defs>';
 
-    /* 右侧主墨团 */
-    s += '<path d="' + blob(1342, 492, 146, rand, { pts: 14, rough: 0.7, squash: 0.9, spikes: true, angular: true }) + '"/>';
-    s += '<path d="' + blob(1456, 628, 90, rand, { pts: 11, rough: 0.75, spikes: true, angular: true }) + '"/>';
-    s += '<path d="' + blob(1216, 652, 72, rand, { pts: 10, rough: 0.78, spikes: true, angular: true }) + '"/>';
-    s += burst(1342, 492, 116, rand, 12);
-    s += burst(1216, 652, 56, rand, 7);
+    s += '<g mask="url(#bwSpray)">';
 
-    /* 标题右上方的墨团 */
-    s += '<path d="' + blob(1046, 286, 86, rand, { pts: 12, rough: 0.72, squash: 0.88, spikes: true, angular: true }) + '"/>';
-    s += '<path d="' + blob(1208, 172, 56, rand, { pts: 9, rough: 0.78, spikes: true, angular: true }) + '"/>';
-    s += burst(1046, 286, 72, rand, 9);
+    /* 1. 喷射尾迹：自原点向右发散的锥形笔触（起点带抖动，避免收成一个尖点） */
+    for (let i = 0; i < 16; i++) {
+      const ang = (-40 + rand() * 80) * Math.PI / 180;
+      const len = 380 + rand() * 700;
+      const jx = ox + (rand() - 0.5) * 46;
+      const jy = oy + (rand() - 0.5) * 46;
+      const ex = jx + Math.cos(ang) * len;
+      const ey = jy + Math.sin(ang) * len;
+      s += '<path d="' + swipe(jx, jy, ex, ey, 4 + rand() * 10, 16 + rand() * 30, rand, 4, true) + '"/>';
+    }
+    /* 更细的飞丝 */
+    for (let i = 0; i < 12; i++) {
+      const ang = (-46 + rand() * 92) * Math.PI / 180;
+      const len = 500 + rand() * 800;
+      const jx = ox + (rand() - 0.5) * 60;
+      const jy = oy + (rand() - 0.5) * 60;
+      const ex = jx + Math.cos(ang) * len;
+      const ey = jy + Math.sin(ang) * len;
+      s += '<path d="' + swipe(jx, jy, ex, ey, 2, 5 + rand() * 10, rand, 2, true) + '"/>';
+    }
 
-    /* 飞溅 */
-    s += droplets(1206, 176, 320, 30, rand, 2, 7);
-    s += droplets(1452, 626, 260, 20, rand, 2, 6);
-    s += droplets(1046, 288, 250, 22, rand, 2, 6);
-    s += droplets(1338, 496, 360, 26, rand, 2, 8);
+    /* 2. 主墨团：圆润撕裂边 */
+    s += '<path d="' + blob(1200, 372, 246, rand, { pts: 26, rough: 0.58, squash: 0.92, spikes: true }) + '"/>';
+    s += '<path d="' + blob(1000, 236, 132, rand, { pts: 20, rough: 0.62, squash: 0.9, spikes: true }) + '"/>';
+    s += '<path d="' + blob(1390, 580, 176, rand, { pts: 22, rough: 0.6, spikes: true }) + '"/>';
+    s += '<path d="' + blob(830, 560, 96, rand, { pts: 15, rough: 0.66, spikes: true }) + '"/>';
+    s += '<path d="' + blob(1230, 800, 130, rand, { pts: 17, rough: 0.64, spikes: true }) + '"/>';
+    s += '<path d="' + blob(1490, 330, 86, rand, { pts: 12, rough: 0.7, angular: true }) + '"/>';
+    s += burst(1200, 372, 190, rand, 13);
+    s += burst(1390, 580, 120, rand, 9);
+    s += burst(830, 560, 62, rand, 6);
 
-    /* 向下甩的墨条 */
-    s += '<path d="' + swipe(1398, 630, 1444, 858, 15, 3, rand, 4) + '"/>';
-    s += '<path d="' + swipe(1252, 660, 1216, 856, 10, 2, rand, 3) + '"/>';
-    s += '<ellipse cx="1448" cy="866" rx="7" ry="9"/>';
-    s += '<ellipse cx="1214" cy="862" rx="5" ry="6"/>';
+    /* 3. 干笔纹理：顺着喷射方向的细条纹 */
+    for (let i = 0; i < 34; i++) {
+      const x = 760 + rand() * 760;
+      const y = 90 + rand() * 700;
+      const w = 90 + rand() * 300;
+      s += '<path d="' + swipe(x, y, x + w, y + (rand() - 0.5) * 40, 3 + rand() * 5, 1, rand, 2, true) + '" opacity="' + (0.05 + rand() * 0.1).toFixed(2) + '"/>';
+    }
 
-    /* 零星小点 */
-    s += droplets(700, 770, 330, 16, rand, 1.5, 4.5);
-    s += droplets(1470, 420, 230, 13, rand, 1.5, 4);
-    s += droplets(900, 620, 300, 14, rand, 1.5, 4.5);
+    /* 4. 飞溅液滴 */
+    s += droplets(1220, 330, 420, 34, rand, 2, 8, 0.5);
+    s += droplets(1440, 600, 320, 22, rand, 2, 7, 0.4);
+    s += droplets(1000, 236, 300, 18, rand, 2, 6, 0.3);
+
+    s += '</g>';
+
+    /* 5. 喷射轨迹弧线（背景色，压在墨迹之上、标题之下） */
+    s += '<path class="arc" pathLength="1" d="M372,596 C760,690 1080,258 1588,34"/>';
 
     return s;
   }
 
-  global.Splat = { build: build, mulberry32: mulberry32 };
+  global.Splat = { build: build, mulberry32: mulberry32, ORIGIN: { x: ORIGIN_X, y: ORIGIN_Y } };
 })(window);
