@@ -8,11 +8,11 @@
 
 | 元素 | 说明 |
 | --- | --- |
-| 斜切白色刷痕底板 | SVG 路径绘制的不规则斜切色带，上沿接近平直、下沿为 −14° 斜线，左下角几乎贴边 |
-| 三套主题配色 | 电光蓝 `#0018B7`、苔原绿 `#003C11`、绯红 `#B5252D`，取自视频逐帧取色 |
-| 角色插画 | 画面左侧已留出插画位（`.l-face`），当前为空，待放入原画图片（建议 `assets/img/face.png`，透明底，`object-fit:contain` 左对齐） |
+| 斜切刷痕底板 | SVG 路径绘制的不规则斜切色带，上沿接近平直、下沿为 −14° 斜线，左下角几乎贴边 |
+| 三套主题配色 | 奶油红（奶油 / 长春花蓝 / 正红 / 靛蓝字）、桃粉玫红（桃白 / 薰衣草紫 / 玫红 / 墨色字）、夜紫金（奶油 / 夜紫 / 明黄 / 玫红字） |
+| 角色插画 | 珊瑚橙发、圆框眼镜的日系插画，透明底 WebP（277KB），贴合奶油色带并随主题换底色；替换 `assets/img/character.webp` 即可换成自己的原画 |
 | 涂鸦墨迹 | JS 程序化生成（固定随机种子）：喷射尾迹笔触、撕裂墨块、飞溅液滴、干笔纹理；用 SVG 遮罩圆自原点扩散实现"喷出"过程 |
-| BRAINWAVE 标题 | 自托管 Anton 字体 + 斜切压缩，`::before` 偏移做 3D 投影 |
+| BRAINWAVE 标题 | 自托管 Anton 字体 + 斜切压缩，独立投影层做 3D 投影与延迟落地 |
 | 网点 / 扫描线 | CSS 叠层，还原视频的低分辨率网点印刷感 |
 
 ## 交互
@@ -52,11 +52,12 @@ index.html?slow=6       # 慢放 6 倍播放入场动画（演示用）
 支持 URL 参数锁定主题并关闭自动轮播，例如：
 
 ```
-index.html?theme=green
-index.html?theme=red
+index.html?theme=cream     # 奶油红（默认）
+index.html?theme=peach     # 桃粉玫红
+index.html?theme=night     # 夜紫金
 ```
 
-未指定时使用 `localStorage` 中保存的上次选择，默认 `blue`。首页开启"自动轮播主题"后，每 4.2 秒在蓝 → 绿 → 红之间循环，与视频中游戏的行为一致。
+未指定时使用 `localStorage` 中保存的上次选择，默认 `cream`。首页开启"自动轮播主题"后，每 4.2 秒在奶油红 → 桃粉玫红 → 夜紫金之间循环。
 
 ## 目录结构
 
@@ -67,6 +68,7 @@ brainwave/
 │   ├── css/main.css           全部样式与主题变量
 │   ├── js/main.js             交互逻辑
 │   ├── js/splat.js            涂鸦墨迹生成器
+│   ├── img/character.webp     角色插画（透明底，可直接替换）
 │   ├── fonts/                 自托管 Anton / Barlow Condensed（latin 子集）
 │   └── favicon.svg
 └── .nojekyll

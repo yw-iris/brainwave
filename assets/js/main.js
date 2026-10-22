@@ -7,7 +7,7 @@
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
-  const THEMES = ['blue', 'green', 'red'];
+  const THEMES = ['cream', 'peach', 'night'];
   const scene = $('#scene');
   const splatLayer = $('#splatLayer');
   const menuItems = $$('.mi');
@@ -303,7 +303,7 @@
   const qs = params.get('theme');
   const stored = (() => { try { return localStorage.getItem('bw-theme'); } catch (e) { return null; } })();
   const initial = (qs && THEMES.indexOf(qs) >= 0) ? qs
-                : (stored && THEMES.indexOf(stored) >= 0) ? stored : 'blue';
+                : (stored && THEMES.indexOf(stored) >= 0) ? stored : 'cream';
 
   applyTheme(initial, { silent: true });
   if (qs && THEMES.indexOf(qs) >= 0) {

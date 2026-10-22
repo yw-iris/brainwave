@@ -4,30 +4,33 @@
    ========================================================= */
 
 :root{
-  --bg:#0018B7;
-  --accent:#FFC214;
-  --title:#004EFE;
-  --shadow:#00107F;
-  --menu:#8296DE;
+  --bg:#7C8CC2;
+  --accent:#F22B2B;
+  --title:#2E3A72;
+  --shadow:#17204A;
+  --menu:#FBE8D8;
+  --band:#FBE8D8;
   --paper:#FFFFFF;
   --page:#000000;
   --ui:#FFFFFF;
   --font-cn:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
 }
 
-.scene[data-theme="green"]{
-  --bg:#003C11;
-  --accent:#EE4B2E;
-  --title:#116E3C;
-  --shadow:#00220A;
-  --menu:#6FA57C;
+.scene[data-theme="peach"]{
+  --bg:#A89CC0;
+  --accent:#E41854;
+  --title:#2E2545;
+  --shadow:#6E0A2E;
+  --menu:#FFF2E8;
+  --band:#FFF2E8;
 }
-.scene[data-theme="red"]{
-  --bg:#B5252D;
-  --accent:#00AAE7;
-  --title:#C92C33;
-  --shadow:#6B1116;
-  --menu:#E8838A;
+.scene[data-theme="night"]{
+  --bg:#2E2545;
+  --accent:#FFC93C;
+  --title:#E41854;
+  --shadow:#6E0A2E;
+  --menu:#C9BEE0;
+  --band:#F4E5D5;
 }
 
 *{box-sizing:border-box;}
@@ -91,21 +94,21 @@ body{
   transition:background-color .55s ease;
 }
 
-/* 白色斜切刷痕 */
+/* 斜切刷痕 */
 .l-band path{
-  fill:#fff;
+  fill:var(--band);
   transition:fill .55s ease;
 }
 .l-band .band-echo{opacity:.92;}
 .l-band{transform:translateZ(0);}
 
-/* 角色插画位（待放入原画图片） */
+/* 角色插画位（透明底 PNG / WebP，自动跟随主题底色） */
 .l-face{
   inset:auto;
   left:0;
-  top:1%;
+  top:12%;
   width:47%;
-  height:105%;
+  height:118%;
   opacity:0;
   transform:translate(calc(var(--px,0) * 1.15%), calc(var(--py,0) * 1.15%));
   transition:opacity .5s ease;
@@ -116,13 +119,15 @@ body{
   object-fit:contain;
   object-position:left center;
   display:block;
+  filter:drop-shadow(0 .35cqw .55cqw rgba(0,0,0,.16));
 }
 
 /* 涂鸦层 */
 .l-splat{overflow:visible;}
-.l-splat path{fill:var(--accent);transition:fill .55s ease;}
+.l-splat path,.l-splat ellipse{fill:var(--accent);transition:fill .55s ease;}
+.l-splat .tex{fill:#000;}
 .l-splat .splat-ink{fill:none;stroke:var(--accent);stroke-linecap:round;transition:stroke .55s ease;}
-.l-splat .splat-dry{fill:#fff;opacity:.9;}
+.l-splat .splat-dry{fill:var(--band);opacity:.9;}
 
 /* 喷射轨迹弧线：背景色，压在墨迹之上 */
 .l-splat .arc{
@@ -492,9 +497,9 @@ body{
 }
 .sw:hover{transform:scale(1.12);}
 .sw.is-on{outline:.22cqw solid #111;}
-.sw-blue{background:#0018B7;}
-.sw-green{background:#003C11;}
-.sw-red{background:#B5252D;}
+.sw-cream{background:#7C8CC2;}
+.sw-peach{background:#A89CC0;}
+.sw-night{background:#2E2545;}
 
 /* ---------------- 开机动画 ---------------- */
 .boot{
