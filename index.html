@@ -45,9 +45,12 @@
       </div>
 
       <nav class="layer l-menu" id="menu" aria-label="主菜单">
-        <button class="mi" data-action="theme"><span class="mi-txt">THEME</span></button>
-        <button class="mi" data-action="records"><span class="mi-txt">RECORDS</span><i class="mi-badge">NEW</i></button>
-        <button class="mi" data-action="settings"><span class="mi-txt">SETTINGS</span></button>
+        <button type="button" class="mi" data-action="about"><span class="mi-txt">ABOUT</span></button>
+        <button type="button" class="mi" data-action="likes"><span class="mi-txt">LIKES</span></button>
+        <button type="button" class="mi" data-action="dislikes"><span class="mi-txt">DISLIKES</span></button>
+        <button type="button" class="mi" data-action="theme"><span class="mi-txt">THEME</span></button>
+        <button type="button" class="mi" data-action="records"><span class="mi-txt">RECORDS</span><i class="mi-badge">NEW</i></button>
+        <button type="button" class="mi" data-action="settings"><span class="mi-txt">SETTINGS</span></button>
       </nav>
 
       <div class="layer l-strip">
@@ -67,7 +70,7 @@
         <div class="paper">
           <div class="paper-head">
             <h2>RECORDS</h2>
-            <button class="paper-close" data-close aria-label="关闭">✕</button>
+            <button type="button" class="paper-close" data-close aria-label="关闭">✕</button>
           </div>
           <table class="rec-table">
             <thead><tr><th>#</th><th>日期</th><th>模式</th><th>得分</th><th>评级</th></tr></thead>
@@ -88,14 +91,14 @@
         <div class="paper">
           <div class="paper-head">
             <h2>SETTINGS</h2>
-            <button class="paper-close" data-close aria-label="关闭">✕</button>
+            <button type="button" class="paper-close" data-close aria-label="关闭">✕</button>
           </div>
           <div class="set-row">
             <span class="set-label">主题配色</span>
             <div class="swatches" id="swatches">
-              <button class="sw sw-cream" data-theme="cream" title="奶油红"></button>
-              <button class="sw sw-peach" data-theme="peach" title="桃粉玫红"></button>
-              <button class="sw sw-night" data-theme="night" title="夜紫金"></button>
+              <button type="button" class="sw sw-cream" data-theme="cream" title="奶油红"></button>
+              <button type="button" class="sw sw-peach" data-theme="peach" title="桃粉玫红"></button>
+              <button type="button" class="sw sw-night" data-theme="night" title="夜紫金"></button>
             </div>
           </div>
           <label class="set-row"><span class="set-label">背景音乐</span><input type="checkbox" checked data-toggle="music"><i class="sw-toggle"></i></label>
@@ -104,6 +107,73 @@
           <label class="set-row"><span class="set-label">自动轮播主题</span><input type="checkbox" checked data-toggle="autocycle"><i class="sw-toggle"></i></label>
           <label class="set-row"><span class="set-label">全屏观看</span><input type="checkbox" data-toggle="fullscreen"><i class="sw-toggle"></i></label>
           <div class="paper-foot">BRAINWAVE v1.1.1 BETA · 三大工作室</div>
+        </div>
+      </div>
+
+      <!-- 面板：关于我 -->
+      <div class="panel panel-about" id="panelAbout" hidden>
+        <div class="paper">
+          <div class="paper-head">
+            <h2>ABOUT</h2>
+            <button type="button" class="paper-close" data-close aria-label="关闭">✕</button>
+          </div>
+          <div class="about-top">
+            <div class="about-face"><img src="assets/img/character.webp" alt="角色头像"></div>
+            <div class="about-id">
+              <div class="about-name">NAME</div>
+              <div class="about-role">开发者 / DEVELOPER</div>
+              <div class="about-tags">
+                <span class="about-tag">BRAINWAVE</span>
+                <span class="about-tag">DEVLOG</span>
+              </div>
+            </div>
+          </div>
+          <p class="about-bio">这里是关于我的自我介绍正文。内容待补充 —— 可以写创作动机、使用的工具、正在进行的方向，或任何想让人记住的事。</p>
+          <div class="kv">
+            <div class="kv-row"><span class="kv-k">项目 / PROJECT</span><span class="kv-v">待补充</span></div>
+            <div class="kv-row"><span class="kv-k">角色 / ROLE</span><span class="kv-v">待补充</span></div>
+            <div class="kv-row"><span class="kv-k">所在地 / BASED IN</span><span class="kv-v">待补充</span></div>
+            <div class="kv-row"><span class="kv-k">链接 / LINKS</span><span class="kv-v">待补充</span></div>
+          </div>
+          <div class="paper-foot">内容待补充 · Content placeholder</div>
+        </div>
+      </div>
+
+      <!-- 面板：喜欢的点 -->
+      <div class="panel panel-likes" id="panelLikes" hidden>
+        <div class="paper">
+          <div class="paper-head">
+            <h2>LIKES</h2>
+            <button type="button" class="paper-close" data-close aria-label="关闭">✕</button>
+          </div>
+          <p class="panel-lede">喜欢的点 —— 这里列出真正让我满意的部分。</p>
+          <ul class="pt-list">
+            <li class="pt"><span class="pt-idx">01</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">02</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">03</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">04</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">05</span><span class="pt-txt">占位条目 · 待补充</span></li>
+          </ul>
+          <div class="paper-foot">内容待补充 · Content placeholder</div>
+        </div>
+      </div>
+
+      <!-- 面板：不喜欢的点 -->
+      <div class="panel panel-dislikes" id="panelDislikes" hidden>
+        <div class="paper">
+          <div class="paper-head">
+            <h2>DISLIKES</h2>
+            <button type="button" class="paper-close" data-close aria-label="关闭">✕</button>
+          </div>
+          <p class="panel-lede">不喜欢的点 —— 这里列出我自己也看不顺眼的部分。</p>
+          <ul class="pt-list">
+            <li class="pt"><span class="pt-idx">01</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">02</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">03</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">04</span><span class="pt-txt">占位条目 · 待补充</span></li>
+            <li class="pt"><span class="pt-idx">05</span><span class="pt-txt">占位条目 · 待补充</span></li>
+          </ul>
+          <div class="paper-foot">内容待补充 · Content placeholder</div>
         </div>
       </div>
 
@@ -122,7 +192,7 @@
       <div class="scene-flash" id="flash"></div>
     </div>
 
-    <button class="fs-btn" id="watchAll" type="button" aria-label="全屏观看" title="全屏观看（F）">
+    <button type="button" class="fs-btn" id="watchAll" type="button" aria-label="全屏观看" title="全屏观看（F）">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
       </svg>

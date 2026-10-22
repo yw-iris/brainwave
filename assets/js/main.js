@@ -16,7 +16,13 @@
   const bootBar = $('#bootBar');
   const bootHint = $('#bootHint');
   const flash = $('#flash');
-  const panels = { records: $('#panelRecords'), settings: $('#panelSettings') };
+  const panels = {
+    records: $('#panelRecords'),
+    settings: $('#panelSettings'),
+    about: $('#panelAbout'),
+    likes: $('#panelLikes'),
+    dislikes: $('#panelDislikes')
+  };
 
   let themeIdx = 0;
   let focusIdx = 0;
@@ -90,9 +96,21 @@
   }
 
   /* ---------------- 菜单 ---------------- */
+  const MENU_COLS = 2;
+  const MENU_ROWS = Math.ceil(menuItems.length / MENU_COLS);
+
   function focusItem(i) {
     focusIdx = (i + menuItems.length) % menuItems.length;
     menuItems.forEach((m, k) => m.classList.toggle('is-active', k === focusIdx));
+  }
+
+  /* 两列栅格：上下在列内移动，左右跨列 */
+  function moveFocus(dc, dr) {
+    let col = Math.floor(focusIdx / MENU_ROWS);
+    let row = focusIdx % MENU_ROWS;
+    col = Math.min(MENU_COLS - 1, Math.max(0, col + dc));
+    row = Math.min(MENU_ROWS - 1, Math.max(0, row + dr));
+    focusItem(col * MENU_ROWS + row);
   }
 
   function activate(i) {
@@ -106,6 +124,12 @@
       openPanel('records');
     } else if (action === 'settings') {
       openPanel('settings');
+    } else if (action === 'about') {
+      openPanel('about');
+    } else if (action === 'likes') {
+      openPanel('likes');
+    } else if (action === 'dislikes') {
+      openPanel('dislikes');
     }
   }
 
@@ -216,9 +240,11 @@
     if (e.key === 'Escape') { closePanels(); return; }
     if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); return; }
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-      e.preventDefault(); focusItem(focusIdx + 1);
+      e.preventDefault();
+      moveFocus(e.key === 'ArrowRight' ? 1 : 0, e.key === 'ArrowDown' ? 1 : 0);
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      e.preventDefault(); focusItem(focusIdx - 1);
+      e.preventDefault();
+      moveFocus(e.key === 'ArrowLeft' ? -1 : 0, e.key === 'ArrowUp' ? -1 : 0);
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       const open = Object.keys(panels).find(k => !panels[k].hidden);
@@ -290,15 +316,10 @@
     if (dot && window.Splat) {
       const R = window.Splat.REVEAL;
       const u = Math.min(1, Math.max(0, (frame - R.begin) / R.dur));
-      const easeX = cubicBezier(0.16, 0.88, 0.2, 1);
-      const easeY1 = cubicBezier(0.2, 0.8, 0.3, 1);
-      const easeY2 = cubicBezier(0.25, 0.92, 0.35, 1);
-      let rx = R.rx * easeX(u);
-      let ry;
-      if (u < 0.26) ry = 46 * easeY1(u / 0.26);
-      else ry = 46 + (R.ry - 46) * easeY2((u - 0.26) / 0.74);
-      dot.setAttribute('rx', rx.toFixed(1));
-      dot.setAttribute('ry', ry.toFixed(1));
+      const easeX = cubicBezier(0.32, 0.58, 0.42, 1);
+      const easeY = cubicBezier(0.18, 0.82, 0.28, 1);
+      dot.setAttribute('rx', (R.rx * easeX(u)).toFixed(1));
+      dot.setAttribute('ry', (R.ry * easeY(u)).toFixed(1));
     }
   } else if (slow > 0) {
     /* 慢放入场动画，便于演示 / 逐帧检查：?slow=4 */
@@ -313,9 +334,12 @@
       '.scene.is-intro .l-strip{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.85s * var(--slow)) !important;}',
       '.scene.is-intro .l-version{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.93s * var(--slow)) !important;}',
       '.scene.is-intro .mi{animation-duration:calc(.45s * var(--slow)) !important;}',
-      '.scene.is-intro .mi:nth-child(1){animation-delay:calc(1.55s * var(--slow)) !important;}',
-      '.scene.is-intro .mi:nth-child(2){animation-delay:calc(1.65s * var(--slow)) !important;}',
-      '.scene.is-intro .mi:nth-child(3){animation-delay:calc(1.75s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(1){animation-delay:calc(1.30s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(2){animation-delay:calc(1.36s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(3){animation-delay:calc(1.42s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(4){animation-delay:calc(1.34s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(5){animation-delay:calc(1.40s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(6){animation-delay:calc(1.46s * var(--slow)) !important;}',
     ].join('\n'));
     /* 喷射遮罩是 SMIL 动画，一并放慢 */
     ['bwSprayAnim', 'bwSprayAnimY'].forEach(id => {
