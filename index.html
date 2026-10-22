@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Brainwave 独立游戏开发日志 #1 · 三大工作室</title>
-<meta name="description" content="Brainwave 独立游戏开发日志 #1 —— 涂鸦风独立游戏标题界面复刻，支持三套主题切换、档案与设置面板。">
+<title>BRAINWAVE · 涂鸦风独立游戏标题界面</title>
+<meta name="description" content="BRAINWAVE 独立游戏标题界面：斜切色带、三套主题配色、程序化涂鸦墨迹，支持 THEME / RECORDS / SETTINGS 交互。">
 <meta name="theme-color" content="#000000">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="stylesheet" href="assets/fonts/fonts.css">
@@ -167,32 +167,14 @@
       <div class="scene-flash" id="flash"></div>
     </div>
 
-    <button class="watch-all" id="watchAll" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18.5h4"/></svg>
-      全屏观看
+    <button class="fs-btn" id="watchAll" type="button" aria-label="全屏观看" title="全屏观看（F）">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+      </svg>
     </button>
   </section>
 
-  <!-- ============ 视频信息区 ============ -->
-  <section class="meta">
-    <div class="creator">
-      <span class="avatar" aria-hidden="true"><i></i></span>
-      <span class="creator-name">草履虫</span>
-      <button class="follow" id="followBtn" type="button">关注</button>
-    </div>
-    <h2 class="caption">Brainwave独立游戏开发日志#1<br>大家好这里是三大工作室，欢迎大家。展开</h2>
-    <div class="search-chip" role="search">相关搜索 · Brainwave独立游戏 <span>›</span></div>
-  </section>
-
-  <!-- ============ 底部操作栏 ============ -->
-  <footer class="actionbar">
-    <div class="comment-box"><span class="pen">✎</span>说点什么...</div>
-    <div class="stats">
-      <span class="st st-like"><b>❤</b>628</span>
-      <span class="st st-fav"><b>★</b>240</span>
-      <span class="st st-cmt"><b>💬</b>54</span>
-    </div>
-  </footer>
+  <p class="hint" id="hint">↑ ↓ 选择菜单 · Enter 确认 · 点击 NEW GAME 开始 · 双击画面全屏</p>
 </main>
 
 <script src="assets/js/splat.js"></script>

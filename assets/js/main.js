@@ -194,20 +194,19 @@
     }
   }
   $('#watchAll').addEventListener('click', toggleFullscreen);
+  scene.addEventListener('dblclick', toggleFullscreen);
 
-  /* ---------------- 关注按钮 ---------------- */
-  const followBtn = $('#followBtn');
-  if (followBtn) {
-    followBtn.addEventListener('click', () => {
-      const on = followBtn.classList.toggle('is-followed');
-      followBtn.textContent = on ? '已关注' : '关注';
-    });
+  /* ---------------- 操作提示 ---------------- */
+  const hint = $('#hint');
+  if (hint) {
+    setTimeout(() => hint.classList.add('is-gone'), 7000);
   }
 
   /* ---------------- 键盘 ---------------- */
   document.addEventListener('keydown', e => {
     if (bootActive) { e.preventDefault(); endBoot(); return; }
     if (e.key === 'Escape') { closePanels(); return; }
+    if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); return; }
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
       e.preventDefault(); focusItem(focusIdx + 1);
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
