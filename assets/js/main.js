@@ -72,13 +72,15 @@
 
   /* ---------------- 入场 ---------------- */
   function playIntro() {
+    const k = slow || 1;
     scene.classList.add('is-intro');
-    setTimeout(() => scene.classList.add('is-in'), 140);
+    setTimeout(() => scene.classList.add('is-in'), 140 * k);
+    if (frame > 0) { introDone = true; return; }   /* 定格模式：保持 is-intro 以锁住动画帧 */
     setTimeout(() => {
       scene.classList.remove('is-intro');
       introDone = true;
       startAutoCycle();
-    }, 3000);
+    }, 3000 * k);
   }
 
   /* ---------------- 菜单 ---------------- */
@@ -241,7 +243,52 @@
   });
 
   /* ---------------- 启动 ---------------- */
-  const qs = new URLSearchParams(location.search).get('theme');
+  const params = new URLSearchParams(location.search);
+  const slow = Math.min(20, Math.max(0, parseFloat(params.get('slow') || '0') || 0));
+  const frame = Math.max(0, parseFloat(params.get('frame') || '0') || 0);
+
+  function injectCss(css) {
+    const st = document.createElement('style');
+    st.textContent = css;
+    document.head.appendChild(st);
+  }
+
+  if (frame > 0) {
+    /* 定格模式：把入场动画冻结在第 F 秒，便于逐帧核对 ?frame=0.9 */
+    const F = frame.toFixed(3);
+    const items = [
+      ['.l-band', 0], ['.l-splat', 0.18], ['.l-face', 0.1], ['.l-title', 0.45],
+      ['.l-title-shadow', 0.56], ['.l-title-wrap::after', 0.8], ['.l-tagline', 0.95],
+      ['.l-strip', 1.2], ['.l-version', 1.28], ['.mi', 1.1],
+    ];
+    let css = '';
+    items.forEach(([sel, d]) => {
+      css += `.scene.is-intro ${sel}{animation-delay:${(d - frame).toFixed(3)}s !important;animation-play-state:paused !important;}\n`;
+    });
+    css += `.scene.is-intro .mi:nth-child(2){animation-delay:${(1.2 - frame).toFixed(3)}s !important;animation-play-state:paused !important;}\n`;
+    css += `.scene.is-intro .mi:nth-child(3){animation-delay:${(1.3 - frame).toFixed(3)}s !important;animation-play-state:paused !important;}\n`;
+    injectCss(css);
+  } else if (slow > 0) {
+    /* 慢放入场动画，便于演示 / 逐帧检查：?slow=4 */
+    document.documentElement.style.setProperty('--slow', String(slow));
+    injectCss([
+      '.scene.is-intro .l-band{animation-duration:calc(.9s * var(--slow)) !important;animation-delay:0s !important;}',
+      '.scene.is-intro .l-splat{animation-duration:calc(.8s * var(--slow)) !important;animation-delay:calc(.18s * var(--slow)) !important;}',
+      '.scene.is-intro .l-face{animation-duration:calc(.8s * var(--slow)) !important;animation-delay:calc(.1s * var(--slow)) !important;}',
+      '.scene.is-intro .l-title{animation-duration:calc(.72s * var(--slow)) !important;animation-delay:calc(.45s * var(--slow)) !important;}',
+      '.scene.is-intro .l-title-shadow{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(.56s * var(--slow)) !important;}',
+      '.scene.is-intro .l-title-wrap::after{animation-duration:calc(.68s * var(--slow)) !important;animation-delay:calc(.8s * var(--slow)) !important;}',
+      '.scene.is-intro .l-tagline{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(.95s * var(--slow)) !important;}',
+      '.scene.is-intro .l-strip{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.2s * var(--slow)) !important;}',
+      '.scene.is-intro .l-version{animation-duration:calc(.5s * var(--slow)) !important;animation-delay:calc(1.28s * var(--slow)) !important;}',
+      '.scene.is-intro .mi{animation-duration:calc(.45s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(1){animation-delay:calc(1.1s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(2){animation-delay:calc(1.2s * var(--slow)) !important;}',
+      '.scene.is-intro .mi:nth-child(3){animation-delay:calc(1.3s * var(--slow)) !important;}',
+    ].join('\n'));
+  }
+
+  const qs = params.get('theme');
   const stored = (() => { try { return localStorage.getItem('bw-theme'); } catch (e) { return null; } })();
   const initial = (qs && THEMES.indexOf(qs) >= 0) ? qs
                 : (stored && THEMES.indexOf(stored) >= 0) ? stored : 'blue';
@@ -255,5 +302,5 @@
   }
   focusItem(0);
   playIntro();
-  setTimeout(() => { if (prefs.autocycle) startAutoCycle(); }, 3000);
+  if (!frame) setTimeout(() => { if (prefs.autocycle) startAutoCycle(); }, 3000 * (slow || 1));
 })();
