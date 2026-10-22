@@ -1,6 +1,7 @@
 /* =========================================================
    BRAINWAVE — 涂鸦风独立游戏标题界面
-   配色取自参考视频：电光蓝 / 苔原绿 / 绯红
+   配色取自用户参考图：奶油底 / 长春花蓝 / 正红 / 玫红 / 明黄
+   三套主题：cream（长春花蓝+正红）· peach（薰衣草+玫红）· night（深靛+明黄）
    ========================================================= */
 
 :root{
@@ -9,6 +10,9 @@
   --title:#2E3A72;
   --shadow:#17204A;
   --menu:#FBE8D8;
+  --mi:#FBE8D8;
+  --mi-shadow:rgba(0,0,0,.55);
+  --mi-hi:#FFFFFF;
   --band:#FBE8D8;
   --paper:#FFFFFF;
   --page:#000000;
@@ -22,14 +26,20 @@
   --title:#2E2545;
   --shadow:#6E0A2E;
   --menu:#FFF2E8;
+  --mi:#FFF2E8;
+  --mi-shadow:rgba(0,0,0,.55);
+  --mi-hi:#FFFFFF;
   --band:#FFF2E8;
 }
 .scene[data-theme="night"]{
-  --bg:#2E2545;
+  --bg:#241F4E;
   --accent:#FFC93C;
-  --title:#E41854;
-  --shadow:#6E0A2E;
+  --title:#3B7DE8;
+  --shadow:#141033;
   --menu:#C9BEE0;
+  --mi:#2B1E0C;
+  --mi-shadow:rgba(255,255,255,.35);
+  --mi-hi:#241A08;
   --band:#F4E5D5;
 }
 
@@ -94,21 +104,21 @@ body{
   transition:background-color .55s ease;
 }
 
-/* 斜切刷痕 */
+/* 斜切刷痕：硬边平行四边形（对齐参考视频） */
 .l-band path{
   fill:var(--band);
   transition:fill .55s ease;
 }
-.l-band .band-echo{opacity:.92;}
+.l-band .band-echo{opacity:.96;}
 .l-band{transform:translateZ(0);}
 
-/* 角色插画位（透明底 PNG / WebP，自动跟随主题底色） */
+/* 角色插画位（左侧竖版人像，边缘已做柔化，直接替换 assets/img/character.webp 即可） */
 .l-face{
   inset:auto;
-  left:0;
-  top:12%;
-  width:47%;
-  height:118%;
+  left:-6.9%;
+  top:-3.3%;
+  width:46.9%;
+  height:74.3%;
   opacity:0;
   transform:translate(calc(var(--px,0) * 1.15%), calc(var(--py,0) * 1.15%));
   transition:opacity .5s ease;
@@ -116,24 +126,24 @@ body{
 }
 .l-face img{
   width:100%;height:100%;
-  object-fit:contain;
-  object-position:left center;
+  object-fit:cover;
+  object-position:50% 50%;
   display:block;
-  filter:drop-shadow(0 .35cqw .55cqw rgba(0,0,0,.16));
+  filter:drop-shadow(0 .18cqw .3cqw rgba(0,0,0,.18));
 }
 
 /* 涂鸦层 */
 .l-splat{overflow:visible;}
-.l-splat path,.l-splat ellipse{fill:var(--accent);transition:fill .55s ease;}
+.l-splat path,.l-splat rect,.l-splat circle,.l-splat ellipse{fill:var(--accent);transition:fill .55s ease;}
 .l-splat .tex{fill:#000;}
 .l-splat .splat-ink{fill:none;stroke:var(--accent);stroke-linecap:round;transition:stroke .55s ease;}
 .l-splat .splat-dry{fill:var(--band);opacity:.9;}
 
-/* 喷射轨迹弧线：背景色，压在墨迹之上 */
+/* 喷射轨迹弧线：深蓝，压在墨迹之上（参考视频里的那条细蓝弧） */
 .l-splat .arc{
   fill:none;
-  stroke:var(--bg);
-  stroke-width:26;
+  stroke:var(--title);
+  stroke-width:9;
   stroke-linecap:round;
   stroke-dasharray:1;
   stroke-dashoffset:0;
@@ -144,9 +154,9 @@ body{
 .l-title-wrap{
   position:absolute;
   inset:auto;
-  left:36.5%;
-  top:13.5%;
-  transform:rotate(-7deg) skewX(-8deg) scaleX(.35)
+  left:36.6%;
+  top:7%;
+  transform:rotate(-10deg) skewX(-8deg) scaleX(.39)
             translate(calc(var(--px,0) * .45%), calc(var(--py,0) * .45%));
   transform-origin:0 50%;
   pointer-events:none;
@@ -154,7 +164,7 @@ body{
 }
 .l-title,.l-title-shadow{
   font-family:"Anton","Arial Black",sans-serif;
-  font-size:26cqw;
+  font-size:21cqw;
   line-height:.78;
   letter-spacing:-.055em;
   white-space:nowrap;
@@ -173,11 +183,11 @@ body{
   left:0;top:0;
   z-index:1;
   color:var(--shadow);
-  transform:translate(.055em,.075em);
+  transform:translate(.06em,.09em);
   opacity:0;
   transition:color .55s ease;
 }
-/* 标题落点冲击波 */
+/* 标题落点冲击波（已停用，保留结构备查） */
 .l-title-wrap::after{
   content:"";
   position:absolute;
@@ -197,12 +207,12 @@ body{
 /* NEW GAME */
 .l-tagline{
   inset:auto;
-  left:50.5%;
-  top:55%;
+  left:37.5%;
+  top:50%;
   display:flex;
   align-items:flex-end;
-  gap:.5cqw;
-  transform:rotate(-7deg) skewX(-8deg);
+  gap:.45cqw;
+  transform:rotate(-10deg) skewX(-8deg);
   transform-origin:0 50%;
   opacity:0;
   z-index:4;
@@ -211,18 +221,18 @@ body{
   font-family:"Barlow Condensed",Impact,sans-serif;
   font-weight:800;
   font-style:italic;
-  font-size:7.2cqw;
+  font-size:5.2cqw;
   line-height:.9;
   color:#fff;
   letter-spacing:.01em;
   text-shadow:.014em .022em 0 rgba(0,0,0,.75), .03em .05em .06em rgba(0,0,0,.35);
 }
 .l-tagline .ng-tag{
-  margin-bottom:-.35cqw;
+  margin-bottom:-.3cqw;
   background:var(--shadow);
   color:#fff;
   font-family:var(--font-cn);
-  font-size:1.9cqw;
+  font-size:1.5cqw;
   font-weight:700;
   line-height:1;
   padding:.32em .42em;
@@ -235,11 +245,11 @@ body{
 .l-menu{
   inset:auto;
   left:57.5%;
-  top:70%;
+  top:66%;
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:.2cqw;
+  gap:.1cqw;
   transform:rotate(-3deg);
   transform-origin:0 0;
   opacity:0;
@@ -256,25 +266,25 @@ body{
   font-family:"Barlow Condensed",Impact,sans-serif;
   font-weight:800;
   font-style:italic;
-  font-size:4.9cqw;
-  line-height:1.16;
+  font-size:3.5cqw;
+  line-height:1.18;
   letter-spacing:.015em;
-  color:var(--menu);
+  color:var(--mi);
   transition:color .55s ease, transform .18s ease, text-shadow .18s ease;
-  text-shadow:.01em .015em 0 rgba(0,0,0,.25);
+  text-shadow:.012em .02em 0 var(--mi-shadow), .02em .04em .05em rgba(0,0,0,.18);
 }
 .mi .mi-txt{display:inline-block;}
 .mi:hover,.mi.is-active{
-  color:#fff;
+  color:var(--mi-hi);
   transform:translateX(.5cqw);
-  text-shadow:.012em .018em 0 rgba(0,0,0,.45);
+  text-shadow:.012em .018em 0 var(--mi-shadow);
 }
 .mi.is-active::before{
   content:"";
   position:absolute;
   left:-.6cqw;top:.15em;bottom:.15em;
   width:.22cqw;
-  background:var(--accent);
+  background:var(--title);
   transition:background-color .55s ease;
 }
 .mi-badge{
@@ -285,7 +295,7 @@ body{
   font-family:"Barlow Condensed",sans-serif;
   font-style:normal;
   font-weight:700;
-  font-size:1.5cqw;
+  font-size:1.2cqw;
   background:var(--accent);
   color:#111;
   padding:.1em .3em;
@@ -301,12 +311,12 @@ body{
   bottom:3%;
   display:flex;
   align-items:center;
-  gap:.7cqw;
+  gap:.6cqw;
   transform:rotate(-8deg);
   opacity:0;
 }
 .play-dot{
-  width:2.4cqw;height:2.4cqw;
+  width:2cqw;height:2cqw;
   background:#fff;
   position:relative;
   flex:none;
@@ -324,9 +334,9 @@ body{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  height:2.7cqw;
-  padding:0 .8cqw;
-  font-size:1.35cqw;
+  height:2.3cqw;
+  padding:0 .7cqw;
+  font-size:1.15cqw;
   font-weight:500;
   color:#fff;
   background:rgba(0,0,0,.35);
@@ -344,7 +354,7 @@ body{
   bottom:2.5%;
   font-family:"Barlow Condensed",sans-serif;
   font-weight:700;
-  font-size:1.5cqw;
+  font-size:1.25cqw;
   letter-spacing:.06em;
   color:var(--menu);
   opacity:0;
@@ -499,7 +509,7 @@ body{
 .sw.is-on{outline:.22cqw solid #111;}
 .sw-cream{background:#7C8CC2;}
 .sw-peach{background:#A89CC0;}
-.sw-night{background:#2E2545;}
+.sw-night{background:#241F4E;}
 
 /* ---------------- 开机动画 ---------------- */
 .boot{
@@ -595,20 +605,31 @@ body{
 .scene.is-in .l-strip{opacity:1;}
 .scene.is-in .l-version{opacity:1;}
 
-/* —— 时序：0.00 色带擦入 → 0.15 墨迹喷射 → 0.80 轨迹弧线 → 0.95 标题砸落 → 1.06 投影落地 → 1.30 冲击波 → 1.40 NEW GAME → 1.55 菜单 —— */
-.scene.is-intro .l-band{animation:bandIn .9s cubic-bezier(.5,0,.2,1) both;}
-.scene.is-intro .l-face{animation:faceIn .8s .1s ease both;}
-.scene.is-intro .l-splat .arc{animation:arcDraw .62s .8s cubic-bezier(.3,.7,.3,1) both;}
-.scene.is-intro .l-title{animation:titleSlam .72s .95s cubic-bezier(.2,1.5,.35,1) both;}
-.scene.is-intro .l-title-shadow{animation:shadowLand .5s 1.06s cubic-bezier(.3,1.3,.4,1) both;}
-.scene.is-intro .l-title-wrap::after{animation:impact .68s 1.3s cubic-bezier(.1,.8,.3,1) both;}
-.scene.is-intro .l-tagline{animation:popIn .5s 1.4s cubic-bezier(.2,1.5,.4,1) both;}
-.scene.is-intro .l-strip{animation:fadeIn .5s 1.85s ease both;}
-.scene.is-intro .l-version{animation:fadeIn .5s 1.93s ease both;}
-.scene.is-intro .mi{animation:miIn .45s ease both;}
-.scene.is-intro .mi:nth-child(1){animation-delay:1.55s;}
-.scene.is-intro .mi:nth-child(2){animation-delay:1.65s;}
-.scene.is-intro .mi:nth-child(3){animation-delay:1.75s;}
+/* 定格模式（?frame=秒）：直接进入终态，喷射揭示由 JS 手动驱动 rx/ry */
+.scene.is-settled .l-face{opacity:1;}
+.scene.is-settled .l-title{opacity:1;transform:scale(1) rotate(0);filter:blur(0);}
+.scene.is-settled .l-title-shadow{opacity:1;transform:translate(.055em,.075em) scale(1);}
+.scene.is-settled .l-tagline{opacity:1;}
+.scene.is-settled .l-menu{opacity:1;}
+.scene.is-settled .l-strip{opacity:1;}
+.scene.is-settled .l-version{opacity:1;}
+.scene.is-settled .mi{opacity:1;}
+.scene.is-settled .l-band{clip-path:inset(0 0 0 0);}
+.scene.is-settled .l-splat .arc{stroke-dashoffset:0;}
+
+/* —— 时序：0.00 色带擦入 → 0.05 插画浮现 → 0.45 墨迹喷射 → 0.80 轨迹弧线 → 0.95 标题浮现 → 1.15 NEW GAME → 1.30 菜单 —— */
+.scene.is-intro .l-band{animation:bandIn .8s cubic-bezier(.5,0,.2,1) both;}
+.scene.is-intro .l-face{animation:faceIn .55s .05s ease both;}
+.scene.is-intro .l-splat .arc{animation:arcDraw .55s .8s cubic-bezier(.3,.7,.3,1) both;}
+.scene.is-intro .l-title{animation:titleIn .5s .95s cubic-bezier(.2,.9,.3,1) both;}
+.scene.is-intro .l-title-shadow{animation:shadowLand .45s .99s cubic-bezier(.3,1,.4,1) both;}
+.scene.is-intro .l-tagline{animation:popIn .45s 1.15s cubic-bezier(.2,1.5,.4,1) both;}
+.scene.is-intro .l-strip{animation:fadeIn .45s 1.5s ease both;}
+.scene.is-intro .l-version{animation:fadeIn .45s 1.58s ease both;}
+.scene.is-intro .mi{animation:miIn .4s ease both;}
+.scene.is-intro .mi:nth-child(1){animation-delay:1.3s;}
+.scene.is-intro .mi:nth-child(2){animation-delay:1.4s;}
+.scene.is-intro .mi:nth-child(3){animation-delay:1.5s;}
 
 @keyframes arcDraw{
   from{stroke-dashoffset:1;}
@@ -623,26 +644,19 @@ body{
   from{opacity:0;transform:translate(-6%,0);}
   to{opacity:1;transform:translate(0,0);}
 }
-@keyframes titleSlam{
-  0%{opacity:0;transform:translateX(26%) rotate(6deg) scaleY(1.25);filter:blur(6px);}
-  55%{opacity:1;transform:translateX(-2.5%) rotate(-1deg) scaleY(.94);filter:blur(0);}
-  78%{transform:translateX(.9%) rotate(.3deg) scaleY(1.04);}
-  100%{opacity:1;transform:translateX(0) rotate(0) scaleY(1);filter:blur(0);}
+@keyframes titleIn{
+  0%{opacity:0;transform:scale(.86) rotate(-1.5deg);filter:blur(4px);}
+  55%{opacity:1;}
+  100%{opacity:1;transform:scale(1) rotate(0);filter:blur(0);}
 }
 @keyframes shadowLand{
-  0%{opacity:0;transform:translate(.055em,.075em) translateX(16%);}
-  100%{opacity:1;transform:translate(.055em,.075em) translateX(0);}
-}
-@keyframes impact{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.15) rotate(-8deg);}
-  14%{opacity:.95;}
-  60%{opacity:.4;}
-  100%{opacity:0;transform:translate(-50%,-50%) scale(2.9) rotate(4deg);}
+  0%{opacity:0;transform:translate(.06em,.09em) scale(.88);}
+  100%{opacity:1;transform:translate(.06em,.09em) scale(1);}
 }
 @keyframes popIn{
-  0%{opacity:0;transform:rotate(-7deg) skewX(-8deg) scale(.55);}
-  70%{opacity:1;transform:rotate(-7deg) skewX(-8deg) scale(1.08);}
-  100%{opacity:1;transform:rotate(-7deg) skewX(-8deg) scale(1);}
+  0%{opacity:0;transform:rotate(-10deg) skewX(-8deg) scale(.55);}
+  70%{opacity:1;transform:rotate(-10deg) skewX(-8deg) scale(1.08);}
+  100%{opacity:1;transform:rotate(-10deg) skewX(-8deg) scale(1);}
 }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes miIn{
@@ -664,8 +678,8 @@ body{
   animation:titleFloat 9s ease-in-out infinite;
 }
 @keyframes titleFloat{
-  0%,100%{transform:rotate(-7deg) skewX(-8deg) scaleX(.35) translate(calc(var(--px,0) * .45%), calc(var(--py,0) * .45%));}
-  50%{transform:rotate(-7deg) skewX(-8deg) scaleX(.35) translate(calc(var(--px,0) * .45%), calc(var(--py,0) * .45% - .45%));}
+  0%,100%{transform:rotate(-10deg) skewX(-8deg) scaleX(.39) translate(calc(var(--px,0) * .45%), calc(var(--py,0) * .45%));}
+  50%{transform:rotate(-10deg) skewX(-8deg) scaleX(.39) translate(calc(var(--px,0) * .45%), calc(var(--py,0) * .45% - .45%));}
 }
 
 /* 主题切换动效 */
